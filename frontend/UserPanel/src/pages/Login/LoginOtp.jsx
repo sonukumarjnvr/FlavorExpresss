@@ -173,14 +173,14 @@ const LoginOtp = ({ isOpen, onClose, onLoginSuccess }) => {
                     <div className="input-box">
                           <span className="icon">📞</span>
                           <input
-                          type="tel"
-                          placeholder="Enter your phone number"
-                          value={phone}
-                          onChange={(e) => {
-                              handlePhone(e);
-                          }}
-                          maxLength={10}
-                          disabled = {showOtpField}
+                            type="tel"
+                            placeholder="Enter your phone number"
+                            value={phone}
+                            onChange={(e) => {
+                                handlePhone(e);
+                            }}
+                            maxLength={10}
+                            disabled = {showOtpField}
                           />
                     </div>
                     <p class="error">{error}</p>

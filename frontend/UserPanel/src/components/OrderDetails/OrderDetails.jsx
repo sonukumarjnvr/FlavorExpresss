@@ -4,7 +4,7 @@ import { useCart } from '../../context/CartContext'
 import CartItem from '../CartItem/CartItem'
 import {GoogleMap, Marker, useLoadScript, Autocomplete} from "@react-google-maps/api"
 import { useAuth } from '../../context/AuthContext'
-
+import { toast } from 'react-toastify'
 
 
 const libs = ["places"];
@@ -31,7 +31,10 @@ const OrderDetails = ({onClose,onSave}) => {
   const [deliveryCharges, setDeliveryCharges] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
   const [savings, setSavings] = useState(0);
-  const {address, setAddress, savedAddress} = useAuth();
+  const {address, setAddress, savedAddress,user} = useAuth();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [showInputBox, setShowInputBox] = useState(false);
+
 
    useEffect(()=>{
         const TotalPrice = (cartItems.reduce((sum, item) => sum + item.price * item.count, 0)).toFixed(2);
@@ -46,6 +49,11 @@ const OrderDetails = ({onClose,onSave}) => {
         setTaxes(taxesPrice);
         setFinalPrice(( parseFloat(TotalPriceWithCustomization)+  parseFloat(taxesPrice) + parseFloat(delivery) -  parseFloat(totalDiscount)).toFixed(2));
 
+        //set phone number
+        if(user.phoneNumber != null){
+          setPhoneNumber(user.phoneNumber);
+          setShowInputBox(true)
+        }
     }, [cartItems]);
 
   const { isLoaded, loadError } = useLoadScript({
@@ -148,6 +156,21 @@ const OrderDetails = ({onClose,onSave}) => {
     onClose();
   }
 
+  const handleSave = ()=>{
+    if(!phoneNumber){
+      toast.error("Plase Enter Phone Number")
+      return
+    }
+
+    const cleanedPhone = phoneNumber.replace(/\s+/g, "").replace(/^\+91/,"");
+    if (!/^[6-9]/.test(cleanedPhone) || !/^\d*$/.test(cleanedPhone)){
+        toast.error("Please Enter Valid Indian Phone Number");
+        return;
+    }
+    setShowInputBox(true);
+    toast.success("Phone Number Saved Successfully")
+  }
+
   return (
     <div className="model-overley">
         <div className="order-details-page">
@@ -160,7 +183,7 @@ const OrderDetails = ({onClose,onSave}) => {
               <div className='cart-items-details'>
                   <div className='cart-items'>
                     {
-                    cartItems.length === 0 && (
+                      cartItems.length === 0 && (
                         <p className="empty-cart">Please Add Food.</p>
                     ) 
                     }
@@ -180,7 +203,25 @@ const OrderDetails = ({onClose,onSave}) => {
                   </div>          
               </div>
               <div className='delivery-address-details'>
-                  <div className='address-div' style={{  }}>
+                  <div className='phoneNumber-div'>
+                      <span>Delivery Phone Number: </span>
+                      <input 
+                        type="tel" 
+                        maxLength={10} 
+                        value={phoneNumber} 
+                        placeholder='Enter Phone Number'
+                        onChange={(e)=>(setPhoneNumber(e.target.value))}
+                        disabled={showInputBox}
+                      />
+                      {
+                        showInputBox ? (
+                          <button className="editBtn" onClick={()=>setShowInputBox(false)}>Edit</button>
+                        ) : (
+                         <button className="saveBtn" onClick={handleSave} >Save</button>
+                        )
+                      }
+                  </div>
+                  <div className='address-div'>
                       <div style={{ marginTop: 6 }}><strong>Your Delivery Address:</strong> {address || "Drag the pin, click map, or use search/current location"}</div>
                   </div>
                   <div className='search-locate'>
