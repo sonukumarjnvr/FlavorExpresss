@@ -1,0 +1,30 @@
+.popularDishes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 35px 30px 35px 30px;
+}
+
+
+.food-items {
+    display: flex;
+    flex-direction: row; /* ✅ row to keep them side by side */
+    flex-wrap: nowrap; /* ✅ prevents wrapping (keeps them in one row) */
+    overflow-x: auto; /* ✅ horizontal scrolling if needed */
+    gap: 2vw;
+    scrollbar-width: none; /* hide scrollbar in Firefox */
+    padding: 10px 0;
+}
+
+.food-items::-webkit-scrollbar {
+    display: none; /* hide scrollbar in Chrome/Edge/Safari */
+}
+
+
+@media(max-width:576px){
+    .popularDishes-container{
+        width: 100%;
+        margin: 0px 5px 0px 5px;
+        gap: 0px;
+    }
+}

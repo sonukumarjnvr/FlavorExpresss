@@ -1,0 +1,55 @@
+.foodDecrease-modal-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(20, 20, 20, 0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
+
+.foodDecrease-modal-container{
+    position: relative; /* do not use absolute */
+    width: 35vw;
+    max-height: 70vh;
+    overflow-y: auto;
+    background: #fff7f3;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    padding: 20px 40px;
+    margin-top: 60px;
+    animation: slideIn 0.3s ease;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+}
+
+.modal-container::-webkit-scrollbar {
+    display: none;
+}
+
+.modal-container p{
+    font-size: 1rem;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 550;
+    color: rgb(78, 77, 77);
+}
+
+.no-scroll {
+  overflow: hidden;     /* disable both vertical & horizontal scrolling */
+}
+
+hr {
+  border: none;              /* remove default border */              /* line thickness */
+  background-color: #007bff; /* your color */
+}
+
+

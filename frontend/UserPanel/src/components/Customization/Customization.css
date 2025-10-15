@@ -1,0 +1,169 @@
+/* Overlay for modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(34, 33, 33, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+/* Lock modal container */
+.modal-container {
+  position: relative; /* do not use absolute */
+  width: 700px;
+  max-height: 70vh;
+  overflow-y: auto;
+  background: #fff7f3;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  padding: 20px 40px;
+  margin-top: 60px;
+  animation: slideIn 0.3s ease;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  
+}
+
+.modal-container::-webkit-scrollbar {
+  display: none;
+  width: 0; /* Ensures no space is left behind */
+  height: 0;
+}
+
+/* Title */
+.modal-title {
+  text-align: center;
+  color: #e25c3d;
+  margin-bottom: 16px;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 20px;
+}
+
+.section h3 {
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: rgb(70, 69, 69);
+}
+
+.sub-headings {
+  margin-top: 10px;
+  font-size: 14px;
+  color: rgb(70, 69, 69);
+  text-decoration: none;
+}
+
+.options-column {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.price-line {
+  text-decoration: line-through;
+  color: grey;
+}
+
+.price-none {
+  visibility: hidden;
+}
+
+.options-row{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 17px;
+  min-width: 200px;
+}
+
+/* Each option row */
+.option-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f7cdbf;
+  border-radius: 8px;
+  padding: 8px 12px;
+  gap: 5px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.option-item:hover {
+  background: #c7746c;
+  color: #fff;
+}
+
+
+.price {
+  font-weight: bold;
+  color: rgb(70, 69, 69);
+}
+
+.no-data {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+/* Add to Cart Button */
+.add-btn {
+  width: 100%;
+  background: #c0574d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.add-btn:hover {
+  background: #a03026;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #475569;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #ef4444;
+}
+
+body.modal-open {
+   overflow: hidden;
+  
+} 
+
+.original-price{
+  font-weight: 550;
+}
+/* Animation */
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

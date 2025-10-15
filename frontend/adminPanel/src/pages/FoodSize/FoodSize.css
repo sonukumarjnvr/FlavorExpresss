@@ -1,0 +1,88 @@
+.size-management {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  
+  border-radius: 12px;
+  color: rgb(0, 0, 0);
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.size-management h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #38bdf8;
+}
+
+.dropdown-section {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+
+select{
+  width: 250px;
+  color: #000000;
+}
+
+ input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #475569;
+  color: rgb(0, 0, 0);
+  font-size: 14px;
+  outline: none;
+}
+
+select:disabled {
+  opacity: 0.6;
+}
+
+.btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn:hover { opacity: 0.9; }
+
+.add-btn { background: #22c55e; color: rgb(255, 255, 255); }
+.edit-btn { background: #3b82f6; color: white; margin-right: 8px; }
+.save-btn { background: #16a34a; color: white; }
+.delete-btn { background: #ef4444; color: white; }
+
+.add-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.size-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.size-list th, .size-list td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #475569;
+}
+
+.size-list th {
+  background: #0f172a;
+  color: #38bdf8;
+}
+
+.no-data {
+  text-align: center;
+  color: #94a3b8;
+  margin-top: 20px;
+}
