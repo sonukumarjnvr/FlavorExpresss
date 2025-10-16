@@ -7,8 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderItem {
-    private String productName;
-    private int quantity;
+    private String name;
+    private int count;
+    private int discount;
     private double price;
     private List<Customization> customization;
 }

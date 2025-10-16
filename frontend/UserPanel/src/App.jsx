@@ -10,6 +10,7 @@ import Menu from './pages/Menu/Menu';
 import OtpVerification from './pages/OtpVerification/OtpVerification';
 import Oauth2Success from './components/Oauth2/Oauth2Success';
 import FoodDetail from './pages/FoodDetail/FoodDetail';
+import Payment from './pages/Payment/Payment.jsx';
 
 
 
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/otpVerification" element={<OtpVerification/>} />
         <Route path="/oauth2success" element={<Oauth2Success/>}/>
         <Route path="/foodDetail/:category/:id" element={<FoodDetail/>}/>
+        <Route path="/payment" element={<Payment/>}/>
       </Routes>
       <Footer/>
     </div>

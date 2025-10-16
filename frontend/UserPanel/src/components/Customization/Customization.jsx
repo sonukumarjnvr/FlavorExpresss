@@ -87,7 +87,7 @@ const Customization = ({ foodId, name, imageUrl, category = "Combo", onClose, on
       description: description
     }
 
-    console.log("cartt newItem before adding to cart :  ",newitem)
+    console.log("cartt newItem before adding to cart :  ", newitem)
     //add item to cart
     addToCart(newitem);
     onAddToCart();

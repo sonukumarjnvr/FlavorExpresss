@@ -39,7 +39,7 @@
 }
 
 .cross:hover{
-    color: #b45c46;
+    color: #af482e;
     cursor: pointer;
 }
 
@@ -113,7 +113,7 @@
 }
 
 .search-locate button:hover{
-    background-color: #b4482d;
+    background-color: #9a2508;
 }
 
 .saved-address{
@@ -176,7 +176,7 @@
 }
 
 .saveBtn:hover{
-    background-color: #b72e0c;
+    background-color: #97260a;
 }
 
 .editBtn{
@@ -191,6 +191,10 @@
 }
 
 .editBtn:hover{
-    background-color: #1e56ce;
+    background-color: #0f47c1;
+}
+
+.continue-btn:hover{
+    background-color: #a53a1f;
 }
 

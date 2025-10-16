@@ -18,8 +18,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartItemRequest {
-    @NotBlank(message = "User ID is required")
-    private String userId;
 
     @NotBlank(message = "Food ID is required")
     private String foodId;

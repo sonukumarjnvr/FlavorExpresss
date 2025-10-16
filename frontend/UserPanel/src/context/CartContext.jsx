@@ -51,18 +51,19 @@ export const CartProvider = ({children})=>{
         
         try {
             if(user){
-                console.log("api call before" , newItem);
-                    const res = await fetchWithAuth("http://localhost:8080/api/cartitems/add/" + user.id,
-                                        {
-                                            method:"POST",
-                                            headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify(newItem)
-                                        }
-                                    )
-                    if(!res.ok){
-                        toast.error("Item Not Add in to Cart");
-                        return;
-                    } 
+                console.log("api call before in addto cart" , newItem);
+                console.log("user id : " , user.id);
+                const res = await fetchWithAuth("http://localhost:8080/api/cartitems/add/" + user.id,
+                                    {
+                                        method:"POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify(newItem)
+                                    }
+                                )
+                if(!res.ok){
+                    toast.error("Item Not Add in to Cart");
+                    return;
+                } 
                 console.log("api call after : " + res.ok);                    
             }
 
@@ -187,7 +188,7 @@ export const CartProvider = ({children})=>{
     const clearCart = () => setCartItems([]);
 
     return (
-    <CartContext.Provider value={{ cartItems, addToCart, clearCart, totalItems, deleteFromCart, removeFromCart}}>
+    <CartContext.Provider value={{ cartItems, addToCart, setCartItems, clearCart, totalItems, deleteFromCart, removeFromCart}}>
        {children}
     </CartContext.Provider>
   );

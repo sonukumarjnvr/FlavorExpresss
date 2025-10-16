@@ -29,7 +29,7 @@ public class FoodiesApplication {
         System.setProperty("GOOGLE_CLIENT_SECRET", dotenv.get("GOOGLE_CLIENT_SECRET"));
         System.setProperty("RAZOR_PAY_KEY_ID", dotenv.get("RAZOR_PAY_KEY_ID"));
         System.setProperty("RAZOR_PAY_SECRET_KEY", dotenv.get("RAZOR_PAY_SECRET_KEY"));
-
+        
         System.setProperty("https.protocols", "TLSv1.2");
 
 		SpringApplication.run(FoodiesApplication.class, args);

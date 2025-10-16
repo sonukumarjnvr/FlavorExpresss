@@ -1,12 +1,10 @@
 package com.example.foodies.service;
 
-import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-
 import com.example.foodies.DTO.CartItemModifyRequest;
 import com.example.foodies.DTO.CartItemRequest;
-import com.example.foodies.DTO.CartItemResponse;
+
 
 public interface CartItemsService {
     public  ResponseEntity<?> addCartItem(CartItemRequest request, String id);

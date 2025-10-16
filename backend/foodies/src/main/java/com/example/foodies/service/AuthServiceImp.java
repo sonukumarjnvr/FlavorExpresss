@@ -1,13 +1,9 @@
 package com.example.foodies.service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +15,6 @@ import com.example.foodies.DTO.UserResponse;
 import com.example.foodies.Util.JwtUtil;
 import com.example.foodies.entity.UserEntity;
 import com.example.foodies.repository.UserRepository;
-import com.example.foodies.service.TwilioService;
 import com.google.firebase.auth.FirebaseToken;
 
 
@@ -60,6 +55,7 @@ public class AuthServiceImp implements AuthService {
 
             //verify user by firebase token;
             FirebaseToken decodedToken = firebaseTokenService.verifyIdToken(idToken);
+            System.out.println("decoded token : "+ decodedToken);
 
             //check it is present in database or not 
             UserEntity entity =  userRepository.findByPhoneNumber(request.getPhoneNumber());

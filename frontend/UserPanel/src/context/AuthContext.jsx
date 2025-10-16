@@ -8,7 +8,6 @@ export  const AuthProvider = ({children})=>{
     const [accessToken, setAccessToken] = useState(null);
     const [loading, setLoading] = useState(true);
     const [address, setAddress] = useState("");
-    const [savedAddress, setSavedAddress] = useState([]);
     
 // fetch access token while page refresh
     useEffect(()=>{
@@ -96,7 +95,7 @@ export  const AuthProvider = ({children})=>{
 
     return (
         <AuthContext.Provider
-          value={{user, accessToken, setAccessToken, setUser, logout, fetchWithAuth, loading, savedAddress, address, setAddress}}
+          value={{user, accessToken, setAccessToken, setUser, logout, fetchWithAuth, loading, address, setAddress}}
         >
             {children}
         </AuthContext.Provider>

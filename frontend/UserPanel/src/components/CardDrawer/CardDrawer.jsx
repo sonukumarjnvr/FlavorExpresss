@@ -3,7 +3,7 @@ import CartItem from "../CartItem/CartItem";
 import "../CardDrawer/CardDrawer.css";
 import {useCart} from "../../context/CartContext";
 import { toast } from "react-toastify";
-import DeliveryAddress from "../OrderDetails/OrderDetails";
+import OrderDetails from "../OrderDetails/OrderDetails";
 
 const CartDrawer = ({onClose}) => {
     const {cartItems} = useCart();
@@ -12,8 +12,8 @@ const CartDrawer = ({onClose}) => {
     const [deliveryCharges, setDeliveryCharges] = useState(0);
     const [finalPrice, setFinalPrice] = useState(0);
     const [savings, setSavings] = useState(0);
-    const [deliveryAddressPage, setDeliveryAddressPage] = useState(false)
-
+    const [deliveryAddressPage, setDeliveryAddressPage] = useState(false);
+    const [submit, setSubmit] = useState(false);
 
     useEffect(()=>{
         const TotalPrice = (cartItems.reduce((sum, item) => sum + item.price * item.count, 0)).toFixed(2);
@@ -44,10 +44,13 @@ const CartDrawer = ({onClose}) => {
     const handleClick = () => {
       //  onClose();
        // window.scrollTo({ top: 0, behavior: 'smooth' });
+       setSubmit(true);
        if(cartItems.length === 0){
+            setSubmit(false);
             toast.error("Please add items to cart");
           return;
        }
+       
        setDeliveryAddressPage(true);
     }
 
@@ -69,7 +72,7 @@ const CartDrawer = ({onClose}) => {
                                 ) 
                             }
                             {cartItems.map((item) => (
-                                <CartItem key={item.foodid} item={item} onClose = {onClose} />
+                                <CartItem key={item.id} item={item} onClose = {onClose} />
                             ))}       
                         </div>
 
@@ -80,7 +83,12 @@ const CartDrawer = ({onClose}) => {
                             <div className="price-row savings"><span>✔ Discounts</span><span>− &#8377; {savings}</span></div>
                             <div className="total-row"><span>Total</span><span>&#8377; {finalPrice}</span></div>
                             <div className="cart-actions">
-                                <button className="continue-btn" onClick={handleClick} >Continue Shopping</button>    
+                                <button className="continue-btn" onClick={handleClick}>
+                                    {
+                                        submit ? <div>Continue Shopping...</div> : <div>Continue Shopping</div>
+                                    }
+                                    
+                                </button>    
                             </div>
                         </div> 
                     </div>
@@ -89,11 +97,14 @@ const CartDrawer = ({onClose}) => {
             {
                 deliveryAddressPage === true &&
                 (
-                   <DeliveryAddress
+                   <OrderDetails
                         onClose = {()=>{setDeliveryAddressPage(false)}}
+                        onCloseDrawer = {onClose}
+                        onCloseSubmit = {()=>{setSubmit(false)}}
                    />
                 )
             }
+
          </div>
         
     );

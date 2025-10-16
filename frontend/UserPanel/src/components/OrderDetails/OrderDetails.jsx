@@ -5,6 +5,7 @@ import CartItem from '../CartItem/CartItem'
 import {GoogleMap, Marker, useLoadScript, Autocomplete} from "@react-google-maps/api"
 import { useAuth } from '../../context/AuthContext'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 
 const libs = ["places"];
@@ -17,8 +18,8 @@ const containerStyle = {
 
 const defaultCenter = { lat: 28.6139, lng: 77.2090 }; 
 
-const OrderDetails = ({onClose,onSave}) => {
-  const {cartItems} = useCart();
+const OrderDetails = ({onClose, onCloseDrawer, onCloseSubmit}) => {
+  const {cartItems, setCartItems} = useCart();
   const mapRef = useRef(null);
   const autocompleteRef = useRef(null);
   const watchIdRef = useRef(null);
@@ -31,9 +32,11 @@ const OrderDetails = ({onClose,onSave}) => {
   const [deliveryCharges, setDeliveryCharges] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
   const [savings, setSavings] = useState(0);
-  const {address, setAddress, savedAddress,user} = useAuth();
+  const {address, setAddress, user, fetchWithAuth} = useAuth();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showInputBox, setShowInputBox] = useState(false);
+  const navigate = useNavigate();
+  const [showWait, setShowWait] = useState(false);
 
 
    useEffect(()=>{
@@ -115,12 +118,19 @@ const OrderDetails = ({onClose,onSave}) => {
       setMarkerPos({ lat, lng });
       setZoom(15);
       setAddress(place.formatted_address || place.name || "");
+      toast.success("Address Selected")
     }
+
+    toast.error("Fail to select address");
   };
 
   // Single-shot: get current location
   const locateNow = () => {
-    if (!navigator.geolocation) return alert("Geolocation not supported");
+    if (!navigator.geolocation) {
+      toast.error("Location Not Fetched");
+      return alert("Geolocation not supported");
+    }
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const lat = pos.coords.latitude;
@@ -136,6 +146,8 @@ const OrderDetails = ({onClose,onSave}) => {
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
+
+    toast.success("Location Fetched");
   };
 
   const mapOptions = {
@@ -154,6 +166,7 @@ const OrderDetails = ({onClose,onSave}) => {
 
   const handleCross = ()=>{
     onClose();
+    onCloseSubmit();
   }
 
   const handleSave = ()=>{
@@ -170,6 +183,104 @@ const OrderDetails = ({onClose,onSave}) => {
     setShowInputBox(true);
     toast.success("Phone Number Saved Successfully")
   }
+
+  const handlePay = async ()=>{
+      setShowWait(true);
+      if(!phoneNumber){
+        setShowWait(false);
+         toast.error("Please Enter Phone Number");
+         return;
+      }
+      if(!address){
+        setShowWait(false);
+        toast.error("Please Enter Delivery Address");
+        return;
+      }
+
+      console.log("proceed to pay button click : ");
+      try {
+        console.log("log before api call");
+        const orderResponse = await fetchWithAuth("http://localhost:8080/api/payment/create-order", {
+                                      method: "POST",
+                                      headers: { "Content-Type": "application/json" },
+                                      body: JSON.stringify({
+                                        totalAmount: finalPrice,
+                                        userId: user.id,
+                                        phone: phoneNumber,
+                                        address: address,
+                                        items: cartItems,
+                                      }),
+                                  });
+        const orderData =  await orderResponse.json();
+       
+        if (!orderData) {
+          alert("No order details found!");
+          return;
+        }
+
+        const options = {
+            key: orderData.keyId,
+            amount: orderData.totalAmount,
+            currency: orderData.currency,
+            name: "Flavor Express",
+            description: "Payment for your order",
+            order_id: orderData.razorpayOrderId,
+            handler: async (response)=> {
+                try {
+                    const verifyRes = await fetchWithAuth("http://localhost:8080/api/payment/verify-payment/" + user.id, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(response),
+                    });
+                    const verifyData = await verifyRes.json();
+
+                    if (verifyData.status === "success"){
+                       setCartItems([]);
+                       onClose();
+                       onCloseDrawer();
+                       toast.success("Your Order is Placed");
+                    }
+                    else {
+                      setShowWait(false);
+                      alert("Payment failed!");
+                    }
+
+                } catch (error) {
+                    console.error(err);
+                    setShowWait(false);
+                    alert("Something went wrong while verifying payment.");
+                }
+            },
+            prefill: {
+                name: "Sonu Sahani",
+                email: "sonu@example.com",
+                contact: orderData.phone,
+            },
+            theme: { color: "#0a66c2" },
+            modal: {
+              ondismiss: function () {
+                 setShowWait(false);
+              },
+            },
+        };
+
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+        
+        rzp.on("payment.failed", function (response) {
+          setShowWait(false);
+          alert("Payment failed. Please try again.");
+          console.error(response.error);
+        });
+
+
+      } catch (error) {
+         setShowWait(false);
+         console.error("Fails to create your order : ", error);
+      }
+  }
+
 
   return (
     <div className="model-overley">
@@ -188,7 +299,7 @@ const OrderDetails = ({onClose,onSave}) => {
                     ) 
                     }
                     {cartItems.map((item) => (
-                        <CartItem key={item.foodid} item={item} onClose = {onClose} />
+                        <CartItem key={item.id} item={item} onClose = {onClose} />
                     ))}
                   </div>
                   <div className="price-summary">       
@@ -197,8 +308,17 @@ const OrderDetails = ({onClose,onSave}) => {
                       <div className="price-row"><span className="spanall">Taxes(GST 5%)</span><span>&#8377; {taxes}</span></div>
                       <div className="price-row savings"><span>✔ Discounts</span><span>− &#8377; {savings}</span></div>
                       <div className="total-row"><span>Total</span><span>&#8377; {finalPrice}</span></div>
-                      <div className="cart-actions">
-                          <button className="continue-btn" >Proceed To Pay &#8377; {finalPrice} </button>
+                      <div className="cart-actions">  
+                        {
+                          showWait ? 
+                          <button className="continue-btn" >
+                            Proceeding... 
+                          </button> 
+                            :
+                          <button className="continue-btn" onClick={handlePay}>
+                            Proceed To Pay &#8377; {finalPrice}  
+                          </button>
+                        }
                       </div>
                   </div>          
               </div>
@@ -267,9 +387,16 @@ const OrderDetails = ({onClose,onSave}) => {
                   <p>Saved Address</p>
                   <div className='saved-address'>
                     {
-                      savedAddress.length > 0 ? (
-                        savedAddress.map((add, index)=>(
-                          <div key={index} className='saved-address-card'>
+                      user?.address?.length > 0 ? (
+                        user.address.map((add, index)=>(
+                          <div 
+                            key={index} 
+                            className='saved-address-card' 
+                            onClick={()=>{
+                              setAddress(add)
+                              toast.success("Address Selected")
+                            }}
+                          >
                              {add}
                           </div>
                         ))

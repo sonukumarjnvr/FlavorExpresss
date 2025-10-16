@@ -7,23 +7,36 @@ import org.apache.commons.codec.digest.HmacUtils;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.foodies.DTO.OrderRequest;
 import com.example.foodies.DTO.OrderResponse;
 import com.example.foodies.entity.OrderEntity;
+import com.example.foodies.entity.UserEntity;
+import com.example.foodies.repository.CartItemsRepository;
 import com.example.foodies.repository.OrderRepository;
-import com.google.api.client.util.Value;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 
-
+@Service
 public class PaymentServiceImp implements PaymentService {
 
     private final OrderRepository orderRepository;
 
-    public PaymentServiceImp(OrderRepository orderRepository){
+    private final CartItemsRepository cartItemsRepository;
+    private final MongoTemplate mongoTemplate;
+
+    public PaymentServiceImp(OrderRepository orderRepository, CartItemsRepository cartItemsRepository, MongoTemplate mongoTemplate){
         this.orderRepository = orderRepository;
+        this.cartItemsRepository = cartItemsRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Value("${keyId}")
@@ -32,12 +45,14 @@ public class PaymentServiceImp implements PaymentService {
     @Value("${secretKey}")
     private String keySecret;
 
-    private Order createRazorpayOrder(double totalAmount, String receiptId){
+    private Order createRazorpayOrder(double amount, String receiptId){
        try {
+        System.out.println("Razorpay order created: " + keyId + " " + keySecret);
          RazorpayClient client = new RazorpayClient(keyId, keySecret);
          JSONObject orderRequest = new JSONObject();
- 
-         orderRequest.put("totalAmount", (int)(totalAmount * 100)); // in paise
+        
+
+         orderRequest.put("amount", (int)(amount * 100)); // in paise
          orderRequest.put("currency", "INR");
          orderRequest.put("receipt", receiptId);
          orderRequest.put("payment_capture", 1);
@@ -91,9 +106,17 @@ public class PaymentServiceImp implements PaymentService {
                     .build();
     }
 
+    // methods to Add order address
+    public void addAddressToUser(String userId, String newAddress) {
+        Query query = new Query(Criteria.where("id").is(userId));
+        Update update = new Update().addToSet("address", newAddress); // prevents duplicates
+        mongoTemplate.updateFirst(query, update, UserEntity.class);
+    }
+
     @Override
-    public ResponseEntity<?> verifyPayment(Map<String, String> data) {
+    public ResponseEntity<?> verifyPayment(Map<String, String> data, String userId) {
         try {
+
             String razorpayOrderId = data.get("razorpay_order_id");
             String razorpayPaymentId = data.get("razorpay_payment_id");
             String razorpaySignature = data.get("razorpay_signature");
@@ -110,6 +133,13 @@ public class PaymentServiceImp implements PaymentService {
                 entity.setRazorpaySignature(razorpaySignature);
                 entity.setStatus("PAID");
                 orderRepository.save(entity);
+
+                //delete all cart items from cartItems of the user
+                cartItemsRepository.deleteByUserId(userId);
+
+                // add address to user Entity
+                addAddressToUser(userId, entity.getAddress());
+
                 response.put("status" , "success");
                 response.put("message", "Payment verified successfully.");
                 return ResponseEntity.ok().body(response);

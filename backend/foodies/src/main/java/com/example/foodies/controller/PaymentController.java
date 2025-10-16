@@ -9,6 +9,7 @@ import com.example.foodies.service.PaymentService;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -24,13 +25,16 @@ public class PaymentController {
     }
 
     @PostMapping("/create-order")
-    public ResponseEntity<?> createOrder(@RequestBody OrderRequest request) {
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequest request) {  
         return paymentservice.createOrder(request);
     }
 
-    @PostMapping("/verify-payment")
-    public ResponseEntity<?> verifyPayment(@RequestBody Map<String, String> data){
-        return paymentservice.verifyPayment(data);
+    @PostMapping("/verify-payment/{id}")
+    public ResponseEntity<?> verifyPayment(@RequestBody Map<String, String> data, @PathVariable String id){
+        if(id == null || id.length() == 0){
+            ResponseEntity.badRequest().body("id is required");
+        }
+        return paymentservice.verifyPayment(data, id);
     }
     
 

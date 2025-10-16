@@ -9,4 +9,5 @@ import com.example.foodies.entity.CartItemsEntity;
 @Repository
 public interface CartItemsRepository extends MongoRepository<CartItemsEntity, String> {
     List<CartItemsEntity> findByUserId(String userId);
+    void deleteByUserId(String userId);
 }

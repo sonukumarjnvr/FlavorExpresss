@@ -8,5 +8,5 @@ import com.example.foodies.DTO.OrderRequest;
 
 public interface PaymentService {
     ResponseEntity<?> createOrder(OrderRequest request);
-    ResponseEntity<?> verifyPayment(Map<String, String> data);
+    ResponseEntity<?> verifyPayment(Map<String, String> data, String userId);
 }
