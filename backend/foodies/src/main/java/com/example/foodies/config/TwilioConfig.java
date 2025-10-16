@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.example.foodies.service.TwilioService;
-import com.twilio.Twilio;
-import jakarta.annotation.PostConstruct;
 
 
 @Configuration

@@ -1,17 +1,14 @@
 package com.example.foodies.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.foodies.DTO.CartItemModifyRequest;
 import com.example.foodies.DTO.CartItemRequest;
-import com.example.foodies.DTO.CartItemResponse;
 import com.example.foodies.service.CartItemsService;
 
 import jakarta.validation.Valid;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

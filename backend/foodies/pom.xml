@@ -143,13 +143,36 @@
             <scope>runtime</scope>
         </dependency>
 
-       <!-- google Oauth 2-->
+       <!-- google Oauth 2 -->
        <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
             <version>2.3.0</version>
         </dependency>
+
+          <!-- Razorpay SDK -->
+        <dependency>
+            <groupId>com.razorpay</groupId>
+            <artifactId>razorpay-java</artifactId>
+            <version>1.4.8</version> <!-- Use the latest stable version -->
+        </dependency> 
+
+        <!-- HMAC verification -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.16.0</version>
+        </dependency>
+
+         <!-- JSON -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version>
+        </dependency>
+
     </dependencies>
+
 
     <build>
         <plugins>

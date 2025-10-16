@@ -1,18 +1,26 @@
 package com.example.foodies.entity;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.List;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Document(collection = "orders")
+@Builder
 public class OrderEntity {
-    private String orderId;
-    private String orderNo;
-    private List<String> foodIdies;
+    @Id
+    private String id;
     private String userId;
-    private double discountedAmount;
+    private List<OrderItem> items;
     private double totalAmount;
-    private String deliveryAddress;
-    private String status;
-    private Date date;
-    private Time time;
+    private String address;
+    private String phone;
+    private String status; // CREATED, PENDING, PAID, FAILED
+    private String razorpayOrderId;
+    private String razorpayPaymentId;
+    private String razorpaySignature;
 }

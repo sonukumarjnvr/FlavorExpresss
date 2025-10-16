@@ -21,7 +21,7 @@ public class CartItemsEntity {
     private int count;
     private double price;
     private String discount;
-     private String imageUrl;
+    private String imageUrl;
     private String category;
     private String description;
     List<Customization> customization;
