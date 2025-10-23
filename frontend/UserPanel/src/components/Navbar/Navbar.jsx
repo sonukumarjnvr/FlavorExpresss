@@ -7,6 +7,7 @@ import { assets } from '../../asset/assets';
 import { useCart } from '../../context/CartContext';
 import CardDrawer from '../CardDrawer/CardDrawer';
 
+
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [showLogin, setShowLogin] = useState(false);
@@ -14,6 +15,7 @@ const Navbar = () => {
   const {accessToken, logout} = useAuth();
   const {totalItems} = useCart();
   const [showCartDrawer, setShowCartDrawer] = useState(false);
+  const {user} = useAuth();
 
 
   const handleCart = (tab, path)=>{
@@ -52,7 +54,9 @@ const Navbar = () => {
             <a className={activeTab === "home" ? "activate" : "home"} onClick={()=>{ handleClick("home", "/")}}>Home</a>
             <a className={activeTab === "menu" ? "activate" : "menu"} onClick={()=>{ handleClick("menu", "/menu")}}>Menu</a>
             <a className={activeTab === "offers" ? "activate" : "offers"} onClick={()=>{ handleClick("offers", "/offers")}}>Offers</a>
-            <a className={activeTab === "myOrders" ? "activate" : "myOrders"} onClick={()=>{ handleClick("myOrders", "/myOrders")}}>My Orders</a>
+            {
+              user?.id &&  <a className={activeTab === "myOrders" ? "activate" : "myOrders"} onClick={()=>{ handleClick("myOrders", "/my-orders")}}>My Orders</a>
+            }   
         </nav>
         
         <div class="nav-actions">

@@ -1,5 +1,6 @@
 package com.example.foodies.service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,8 @@ import com.example.foodies.entity.OrderEntity;
 import com.example.foodies.entity.UserEntity;
 import com.example.foodies.repository.CartItemsRepository;
 import com.example.foodies.repository.OrderRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -32,11 +35,14 @@ public class PaymentServiceImp implements PaymentService {
 
     private final CartItemsRepository cartItemsRepository;
     private final MongoTemplate mongoTemplate;
+    
+    private final SequenceGeneratorService sequenceGenerator;
 
-    public PaymentServiceImp(OrderRepository orderRepository, CartItemsRepository cartItemsRepository, MongoTemplate mongoTemplate){
+    public PaymentServiceImp(OrderRepository orderRepository, CartItemsRepository cartItemsRepository, MongoTemplate mongoTemplate, SequenceGeneratorService sequenceGenerator){
         this.orderRepository = orderRepository;
         this.cartItemsRepository = cartItemsRepository;
         this.mongoTemplate = mongoTemplate;
+        this.sequenceGenerator = sequenceGenerator;
     }
 
     @Value("${keyId}")
@@ -68,14 +74,20 @@ public class PaymentServiceImp implements PaymentService {
     public ResponseEntity<?> createOrder(OrderRequest request){
         try{
             OrderEntity entity = convertRequestToEntity(request);
-            entity.setStatus("CREATED");
+            entity.setPaymentStatus("CREATED");
             entity =  orderRepository.save(entity);
 
             //create razor pay order
             Order razorPayOrder = createRazorpayOrder(entity.getTotalAmount(), entity.getId());
             entity.setRazorpayOrderId(razorPayOrder.get("id"));
-            entity.setStatus("PENDING");
-            entity =  orderRepository.save(entity);
+            entity.setPaymentStatus("PENDING");
+            // Generate order ID
+            long seq = sequenceGenerator.getNextSequence("orderNo");
+            String orderNo = String.format("ORD-%05d", seq);
+            entity.setOrderNo(orderNo);
+            entity.setOrderDateTime(LocalDateTime.now());
+
+            entity = orderRepository.save(entity);
 
             OrderResponse response = convertEntityToResponse(entity);
 
@@ -99,11 +111,13 @@ public class PaymentServiceImp implements PaymentService {
     }
 
     private OrderResponse convertEntityToResponse(OrderEntity entity){
-        return OrderResponse.builder()
-                    .totalAmount(entity.getTotalAmount())
-                    .razorpayOrderId(entity.getRazorpayOrderId())
-                    .id(entity.getId())
-                    .build();
+        return OrderResponse.builder()  
+                .totalAmount(entity.getTotalAmount())
+                .razorpayOrderId(entity.getRazorpayOrderId())
+                .id(entity.getId())
+                .OrderNo(entity.getOrderNo())
+                .orderDateTime(entity.getOrderDateTime())
+                .build();
     }
 
     // methods to Add order address
@@ -131,7 +145,8 @@ public class PaymentServiceImp implements PaymentService {
             if(expectedSignature.equals(razorpaySignature)){
                 entity.setRazorpayPaymentId(razorpayPaymentId);
                 entity.setRazorpaySignature(razorpaySignature);
-                entity.setStatus("PAID");
+                entity.setPaymentStatus("PAID");
+                entity.setOrderStatus("PLACED");
                 orderRepository.save(entity);
 
                 //delete all cart items from cartItems of the user
@@ -145,7 +160,7 @@ public class PaymentServiceImp implements PaymentService {
                 return ResponseEntity.ok().body(response);
             }
             else{
-                entity.setStatus("FAILED");
+                entity.setPaymentStatus("FAILED");
                 orderRepository.save(entity);
                 response.put("status", "failed");
                 response.put("message", "Payment verification failed.");

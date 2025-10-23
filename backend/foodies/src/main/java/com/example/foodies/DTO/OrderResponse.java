@@ -1,5 +1,7 @@
 package com.example.foodies.DTO;
 
+import java.time.LocalDateTime;
+
 import lombok.*;
 
 
@@ -13,4 +15,6 @@ public class OrderResponse {
     private String razorpayOrderId;
     private String keyId;
     private String currency;
+    private String OrderNo;
+    private LocalDateTime orderDateTime;
 }

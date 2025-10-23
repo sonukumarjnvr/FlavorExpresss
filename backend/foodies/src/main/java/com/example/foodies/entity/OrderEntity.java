@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -19,8 +20,11 @@ public class OrderEntity {
     private double totalAmount;
     private String address;
     private String phone;
-    private String status; // CREATED, PENDING, PAID, FAILED
+    private String OrderNo;
+    private String paymentStatus; // CREATED, PENDING, PAID, FAILED
+    private String orderStatus; // PLACED, BAKING, PREPARED, OUT FOR DELIVERY, DELIVERED
     private String razorpayOrderId;
     private String razorpayPaymentId;
     private String razorpaySignature;
+    private LocalDateTime orderDateTime;
 }
