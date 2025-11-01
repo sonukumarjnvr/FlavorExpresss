@@ -1,0 +1,231 @@
+.my-orders-container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.left-cointainer{
+    width: 25%;
+    background-color: #f5e3da;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 25px;
+}
+
+.right-containerr{
+    width: 75%;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 20px;
+    padding: 25px 25px 0px 25px;
+}
+
+.track-orders{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #fff;
+    padding: 20px 10px;
+    border-radius: 0.5rem;
+    margin: 0px 20px;
+    border: 1px solid #afafaf;
+}
+
+.namee{
+    padding: 0px 0px 0px 20px;
+    color: black;
+    font-size: 1.2rem;
+    margin: 0px;
+    width: 100%;
+    font-weight: 550;
+}
+
+.btnn{
+    margin: 0px 15px;
+    border: none;
+    background-color: #fae0d8;
+    border: 1px solid #f6c9bc;
+    border-radius: 0.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btnn:hover{
+    background-color: #c0574d;
+    color: #fff;
+    border: 1px solid #c0574d;
+}
+
+.sort-bar1{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #fae0d8;
+    padding: 10px 10px;
+    border-radius: 0.5rem;
+    gap: 3px;
+    border: 1px solid #f6c9bc;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 170px;
+    min-width: 170px;
+}
+
+.sort-bar1:hover{
+    background-color: #c0574d;
+    color: white;
+}
+
+.sort-bar1 img,
+.sort-bar1 label,
+.sort-bar1 select,
+.sort-bar1 option {
+  color: inherit;
+  background-color: transparent;
+}
+
+.sortby-label1 {
+  font-size: 15px;
+  font-weight: 500;
+  color: #222;
+}
+
+
+.sortby-select1 {
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 500;
+  color: #222;
+  outline: none;
+  cursor: pointer;
+  width: 110px;
+}
+
+.sortby-select1:hover {
+  color: #fff;
+}
+
+.sortby-select1 option {
+  color: #333;
+  background: #fff;
+  font-weight: 400;
+}
+
+.sort-bar1 img{
+    width: 20px;
+    height: 20px;
+}
+
+.click-btn{
+    background-color: #c0574d;
+    color: white;
+    margin: 0px 15px;
+    border: none;
+    border: 1px solid #f6c9bc;
+    border-radius: 0.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.orders-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+    justify-content: center;
+    align-items: start;
+}
+
+.not-found{
+    font-size: 1.3rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.not-found-button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.order-now{
+    border: none;
+    background-color: #c0574d;
+    padding: 10px 20px;
+    color: #fff;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.order-now:hover{
+    background-color: #9f3228;
+}
+
+.profile{
+    display: flex;
+    flex-direction: row;
+    padding: 10px 10px;
+    background-color: #fff;
+    border-radius: 0.8rem;
+    border: 1px solid #d5d3d3;
+    width: 67vw;
+    gap: 15px;
+}
+
+.profile img{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+.profile-details{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;      
+}
+
+.profile-details input{
+    border: none;
+    background-color: #fff;
+    font-size: 1.1rem;
+    width: 140px;
+    font-weight: 550;
+}
+
+.profile-name{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.action{
+    padding: 4px 10px;
+    background-color: #ffffff;
+    border: 1px solid #d5d3d3;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action:hover{
+    background-color: brown;
+    color: #fff;
+    border: none;   
+}
+
+.phoneNumber{
+    font-size: 1rem;
+    opacity: 0.8;
+}

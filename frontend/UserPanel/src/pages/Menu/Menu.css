@@ -173,7 +173,7 @@
     border: none;
     font-size: 1rem;
     border-radius: 2rem;
-    border: 1px solid #908e8e; 
+    border: none; 
     transition: all 0.3s ease;
     cursor: pointer;  
 }

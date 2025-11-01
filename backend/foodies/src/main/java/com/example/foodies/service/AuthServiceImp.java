@@ -1,6 +1,7 @@
 package com.example.foodies.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -140,5 +141,16 @@ public class AuthServiceImp implements AuthService {
     }
 
 
-
+    @Override
+    public ResponseEntity<?> updateName(String userId, String name) {
+        try {
+            UserEntity user = userRepository.findById(userId)
+                                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+            user.setName(name);
+            userRepository.save(user);
+            return ResponseEntity.ok().body(user);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL SERVER ERROR", e);
+        }
+    }
 }

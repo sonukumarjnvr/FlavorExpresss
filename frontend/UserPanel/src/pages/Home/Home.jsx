@@ -28,43 +28,42 @@ const Home = () => {
 
 
   useEffect(() => {
-    
-    const words = ["Search Pizza....", "Search Burger....", "Search Biryani....", "Search Rolls....", "Search Biryani...."];
-    let wordIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-
-    const typingSpeed = 120;
-    const deletingSpeed = 80;
-    const pauseBetweenWords = 1000;
-
-    function typeEffect() {
-      const inputEl = searchRef.current;
-      if (!inputEl) return;
-
-      const currentWord = words[wordIndex];
-      inputEl.setAttribute("placeholder", currentWord.substring(0, charIndex));
-
-      if (!isDeleting && charIndex < currentWord.length) {
-        charIndex++;
-        setTimeout(typeEffect, typingSpeed);
-      } else if (isDeleting && charIndex > 0) {
-        charIndex--;
-        setTimeout(typeEffect, deletingSpeed);
-      } else {
-        if (!isDeleting) {
-          isDeleting = true;
-          setTimeout(typeEffect, pauseBetweenWords);
-        } else {
-          isDeleting = false;
-          wordIndex = (wordIndex + 1) % words.length;
+      const words = ["Search Pizza....", "Search Burger....", "Search Biryani....", "Search Rolls....", "Search Biryani...."];
+      let wordIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+  
+      const typingSpeed = 120;
+      const deletingSpeed = 80;
+      const pauseBetweenWords = 1000;
+  
+      function typeEffect(){
+        const input = searchRef.current;
+        if (!input) return;
+  
+        const currentWord = words[wordIndex];
+        input.setAttribute("placeholder", currentWord.substring(0, charIndex));
+  
+        if (!isDeleting && charIndex < currentWord.length) {
+          charIndex++;
           setTimeout(typeEffect, typingSpeed);
+        } else if (isDeleting && charIndex > 0) {
+          charIndex--;
+          setTimeout(typeEffect, deletingSpeed);
+        } else {
+          if (!isDeleting) {
+            isDeleting = true;
+            setTimeout(typeEffect, pauseBetweenWords);
+          } else {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+            setTimeout(typeEffect, typingSpeed);
+          }
         }
       }
-    }
-
-    typeEffect(); // Start typing when component mounts
-  }, []);
+  
+      typeEffect(); // Start typing when component mounts
+    }, []);
 
 
   // when user selects a place
@@ -185,7 +184,7 @@ const Home = () => {
                     <i class="bi bi-search"></i>
                     <input 
                       type="text" 
-                      placeholder="" 
+                      placeholder="Search Foods..." 
                       class="search-input"
                       ref={searchRef}
                       value={searchText}

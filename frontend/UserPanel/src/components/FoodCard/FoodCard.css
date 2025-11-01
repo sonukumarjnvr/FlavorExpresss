@@ -12,6 +12,7 @@
     background-color: #fff;
     border: 1px solid #e6e4e4;
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* smooth animation */
+     box-shadow: 2px 2px 6px rgba(36, 36, 36, 0.3);
 }
 .dish-card:hover {
     transform: scale(1.02); /* slightly bigger */

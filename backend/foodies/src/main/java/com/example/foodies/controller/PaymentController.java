@@ -9,6 +9,7 @@ import com.example.foodies.service.PaymentService;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,5 +38,12 @@ public class PaymentController {
         return paymentservice.verifyPayment(data, id);
     }
     
-
+    @GetMapping("/payment-info/{paymentId}")
+    public ResponseEntity<?> paymentInfo(@PathVariable String paymentId){
+        if(paymentId == null || paymentId.length() == 0){
+            ResponseEntity.badRequest().body("paymentId is required");
+        }
+        System.out.println("paymentId :" + paymentId);
+        return paymentservice.paymentInfo(paymentId);
+    }
 }

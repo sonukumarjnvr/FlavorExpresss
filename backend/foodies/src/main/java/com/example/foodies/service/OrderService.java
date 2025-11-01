@@ -10,5 +10,7 @@ public interface OrderService {
     public ResponseEntity<?> getOrdersByDate(LocalDate date);
     public ResponseEntity<?> getOrdersBetweenDates(LocalDate startDate, LocalDate endDate);
     public ResponseEntity<?> getOrdersByUser(String userId);
-    public ResponseEntity<?> getOrdersBetweenByUserId(String userId, LocalDate startDate, LocalDate endDate);
+    public ResponseEntity<?> getOrdersFilterByUserId(String userId, String status, LocalDate startDate, LocalDate endDate);
+    public ResponseEntity<?> cancelOrderByUserId(String userId, String orderId);
+    public ResponseEntity<?> getOrderByOrderId(String userId, String orderId);
 }

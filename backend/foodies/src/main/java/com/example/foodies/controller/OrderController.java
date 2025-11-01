@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -62,14 +63,35 @@ public class OrderController {
         return orderService.getOrdersByUser(userId);
     }
     
-    @GetMapping("/user/{userId}/between")
+    @GetMapping("/user/{userId}/filter")
     public ResponseEntity<?> getOrdersBetweenByUser(
             @PathVariable String userId,
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            @RequestParam(value = "status", required= true) String status,
+            @RequestParam(value = "startDate", required= true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(value = "endDate" , required= true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         if(userId == null || userId.length() == 0){
             return ResponseEntity.badRequest().body("userId is required");
         }
-        return orderService.getOrdersBetweenByUserId(userId, startDate, endDate);
+        System.out.println("userId : " + userId);
+        System.out.println("userId : " + status);
+        System.out.println("userId : " + startDate);
+        System.out.println("userId : " + endDate);
+        return orderService.getOrdersFilterByUserId(userId, status, startDate, endDate);
     }
+
+    @PutMapping("/cancel/{userId}/{orderId}")
+    public ResponseEntity<?> cancelOrderByUser(
+            @PathVariable String userId,
+            @PathVariable String orderId) {
+        if(userId == null || orderId == null){
+            return ResponseEntity.badRequest().body("userId and orderId can not be null");
+        }
+        return orderService.cancelOrderByUserId(userId, orderId);
+    }
+
+    @GetMapping("/{userId}/{orderId}")
+    public ResponseEntity<?> getOrderByOrderId(@PathVariable(required = true) String userId, @PathVariable(required = true) String orderId) {
+        return orderService.getOrderByOrderId(userId, orderId);
+    }
+    
 }

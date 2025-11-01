@@ -11,5 +11,7 @@ public class OrderItem {
     private int count;
     private int discount;
     private double price;
+    private String size;    
+    private String imageUrl;
     private List<Customization> customization;
 }

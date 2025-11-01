@@ -26,5 +26,8 @@ public class OrderEntity {
     private String razorpayOrderId;
     private String razorpayPaymentId;
     private String razorpaySignature;
+    private String imageUrl;
     private LocalDateTime orderDateTime;
+    private String currency;
+    private String keyId;
 }

@@ -1,6 +1,7 @@
 package com.example.foodies.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,6 +22,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 
@@ -67,5 +71,14 @@ public class AuthController {
                         .build(); 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok("Logged Out Successfully");
+    }
+
+    @PutMapping("/{userId}/update-name")
+    public ResponseEntity<?> updateName(@PathVariable String userId, @RequestParam String name) {  
+        if(userId == null || name == null){
+            return ResponseEntity.badRequest().body("userId and orderId can not be null");
+        }
+
+        return userService.updateName(userId, name);
     }
 }

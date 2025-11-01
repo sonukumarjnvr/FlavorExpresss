@@ -18,7 +18,6 @@ import com.example.foodies.entity.UserEntity;
 import com.example.foodies.repository.CartItemsRepository;
 import com.example.foodies.repository.OrderRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -26,6 +25,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.razorpay.Order;
+import com.razorpay.Payment;
 import com.razorpay.RazorpayClient;
 
 @Service
@@ -75,7 +75,7 @@ public class PaymentServiceImp implements PaymentService {
         try{
             OrderEntity entity = convertRequestToEntity(request);
             entity.setPaymentStatus("CREATED");
-            entity =  orderRepository.save(entity);
+            entity = orderRepository.save(entity);
 
             //create razor pay order
             Order razorPayOrder = createRazorpayOrder(entity.getTotalAmount(), entity.getId());
@@ -86,13 +86,13 @@ public class PaymentServiceImp implements PaymentService {
             String orderNo = String.format("ORD-%05d", seq);
             entity.setOrderNo(orderNo);
             entity.setOrderDateTime(LocalDateTime.now());
+            entity.setKeyId(keyId);
+            entity.setCurrency(razorPayOrder.get("currency"));
 
+            System.out.println("entity in service : " + entity);
             entity = orderRepository.save(entity);
 
             OrderResponse response = convertEntityToResponse(entity);
-
-            response.setCurrency(razorPayOrder.get("currency"));
-            response.setKeyId(keyId);
 
             return ResponseEntity.ok().body(response);
         }catch(Exception e){
@@ -107,6 +107,7 @@ public class PaymentServiceImp implements PaymentService {
                 .items(request.getItems())
                 .totalAmount(request.getTotalAmount())
                 .phone((request.getPhone()))
+                .imageUrl(request.getItems().get(0).getImageUrl())
                 .build();
     }
 
@@ -117,6 +118,9 @@ public class PaymentServiceImp implements PaymentService {
                 .id(entity.getId())
                 .OrderNo(entity.getOrderNo())
                 .orderDateTime(entity.getOrderDateTime())
+                .imageUrl(entity.getImageUrl())
+                .currency(entity.getCurrency())
+                .keyId(entity.getKeyId())
                 .build();
     }
 
@@ -167,6 +171,18 @@ public class PaymentServiceImp implements PaymentService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
 
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", e);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> paymentInfo(String paymentId) {
+        try {
+            RazorpayClient client = new RazorpayClient(keyId, keySecret);
+            Payment payment = client.payments.fetch(paymentId);
+            JSONObject json = payment.toJson();
+            return ResponseEntity.ok().body(json.toString());   
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", e);
         }

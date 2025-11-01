@@ -11,6 +11,7 @@ import OtpVerification from './pages/OtpVerification/OtpVerification';
 import Oauth2Success from './components/Oauth2/Oauth2Success';
 import FoodDetail from './pages/FoodDetail/FoodDetail';
 import MyOrders from './pages/MyOrders/MyOrders'
+import OrderDetails from './pages/OrderDetails/OrderDetails';
 
 
 
@@ -26,10 +27,11 @@ const App = () => {
         <Route path="/oauth2success" element={<Oauth2Success/>}/>
         <Route path="/foodDetail/:category/:id" element={<FoodDetail/>}/>
         <Route path="/my-orders" element={<MyOrders/>}/>
+        <Route path="/my-orders/:userId/:orderId" element={<OrderDetails/>}/>
       </Routes>
       <Footer/>
     </div>
   )
 }
 
-export default App
+export default App  
